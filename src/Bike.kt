@@ -1,8 +1,4 @@
-import java.util.*
-import java.util.concurrent.Delayed
-import kotlin.concurrent.timer
-import kotlin.concurrent.timerTask
-import kotlin.properties.Delegates
+
 
 enum class KeyState{
     ACCESSORYMODE,KEYOUT;
@@ -68,12 +64,9 @@ enum class HeadlightState{
         }
     }
 }
-internal var keyHolder = KeyState.KEYOUT
-//internal var cluthBar = ClutchState.NORMAL
-//internal var horns = HornState.RELEASED
-internal var indigat = Indigator.NONE
+
 class Bike {
-    var key = keyHolder
+    var key = KeyState.KEYOUT
     var clutch:ClutchState = ClutchState.NORMAL
     var brake = {
             c:Brake -> if (Brake.BrakeUsed(c)){
@@ -124,6 +117,27 @@ class Bike {
                 return
         }
     }
+    fun accelerator() {
+        when (gear) {
+            1 -> if (speedLimit<20){
+                speed += 5
+                speedometer()
+            }
+            2 -> if (speedLimit<35){
+                speed += 5
+                speedometer()
+            }
+            3 -> if (speedLimit<50){
+                speed += 5
+                speedometer()
+            }
+            4 -> if (speedLimit<90){
+                speed += 5
+                speedometer()
+            }
+            else -> return
+        }
+    }
     private fun engine(gear:Int){
         if(KeyState.KeySlot(key) && IgnitionState.Started(start)){
             when(gear){
@@ -150,27 +164,6 @@ class Bike {
             }
         }
     }
-    fun accelerator() {
-        when (gear) {
-            1 -> if (speedLimit<20){
-                speed += 5
-                speedometer()
-            }
-            2 -> if (speedLimit<35){
-                speed += 5
-                speedometer()
-            }
-            3 -> if (speedLimit<50){
-                speed += 5
-                speedometer()
-            }
-            4 -> if (speedLimit<90){
-                speed += 5
-                speedometer()
-            }
-            else -> return
-        }
-    }
 
     private fun speedometer(){
         println(speed)
@@ -182,24 +175,5 @@ class Bike {
         return
     }
 }
-fun main() {
-    var k:List<String> = readLine()!!.split(" ".toRegex())
-    if (k.contains("put")&&k.contains("key")){
-        keyHolder = KeyState.ACCESSORYMODE
-        val d = Bike()
-        d.start
-        d.horn(HornState.PRESSED)
-        d.brake(Brake.PRESSED)
-    }
-    /*var temp = false
-    for (i in k){
-        if (i.lowercase()=="put"|| temp){
-            temp = true
-            if (i.lowercase()=="key"){
-                keyHolder = KeyState.ACCESSORYMODE
-                val s = Bike()
-            }
-        }
-    }*/
-}
+
 
