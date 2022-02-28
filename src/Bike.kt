@@ -176,4 +176,7 @@ class Bike {
     }
 }
 
+fun main() {
+    println("HIHIHIHIHIHI")
+}
 
